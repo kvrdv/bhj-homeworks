@@ -17,13 +17,37 @@ class Game {
   }
 
   registerEvents() {
-    /*
-      TODO:
-      Написать обработчик события, который откликается
-      на каждый введённый символ.
-      В случае правильного ввода слова вызываем this.success()
-      При неправильном вводе символа - this.fail();
-     */
+    const timer = document.getElementById("timer");
+    timer.textContent = document.querySelectorAll('.symbol').length;
+    let target = this;
+    let targetLetter = target.currentSymbol;
+
+    function countdown() {
+      if (timer.textContent == 0) {
+        alert('Время вышло!');
+        return location.reload();
+      } else {
+        timer.textContent -= 1;
+      }
+    }
+    setInterval(countdown, 1000);
+
+    function pressedKey(e) {
+      if (targetLetter.textContent.toLowerCase() == e.key.toLowerCase()) {
+        target.success();
+        if (targetLetter.nextSibling == null) {
+          targetLetter = target.currentSymbol;
+          timer.textContent = document.querySelectorAll('.symbol').length;
+        } else {
+          targetLetter = targetLetter.nextSibling;
+        }
+      } else {
+        target.fail();
+        targetLetter = target.currentSymbol;
+        timer.textContent = document.querySelectorAll('.symbol').length;
+      }
+    }
+    document.addEventListener('keydown', pressedKey);
   }
 
   success() {
@@ -56,18 +80,18 @@ class Game {
 
   getWord() {
     const words = [
-        'bob',
-        'awesome',
-        'netology',
-        'hello',
-        'kitty',
-        'rock',
-        'youtube',
-        'popcorn',
-        'cinema',
-        'love',
-        'javascript'
-      ],
+      'bob',
+      'awesome',
+      'netology',
+      'hello',
+      'kitty',
+      'rock',
+      'youtube',
+      'popcorn',
+      'cinema',
+      'love',
+      'javascript'
+    ],
       index = Math.floor(Math.random() * words.length);
 
     return words[index];
@@ -77,7 +101,7 @@ class Game {
     const html = [...word]
       .map(
         (s, i) =>
-          `<span class="symbol ${i === 0 ? 'symbol_current': ''}">${s}</span>`
+          `<span class="symbol ${i === 0 ? 'symbol_current' : ''}">${s}</span>`
       )
       .join('');
     this.wordElement.innerHTML = html;
@@ -87,4 +111,11 @@ class Game {
 }
 
 new Game(document.getElementById('game'))
+
+
+
+
+
+
+
 
