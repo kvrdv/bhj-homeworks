@@ -1,8 +1,10 @@
 // Получаем форму:
 let textForm = document.getElementById('editor');
 
-// Сохраняем текст в localStorage:
-localStorage.setItem('message', textForm.value);
+document.addEventListener('keydown', function () {
+  // Сохраняем текст в localStorage:
+  localStorage.setItem('message', textForm.value);
+});
 
 // При загрузке страницы, возвращаем в форму сохраненный в localStorage текст:
 window.addEventListener('load', () => {
@@ -13,6 +15,6 @@ window.addEventListener('load', () => {
 // При клике на кнопку очищаем localStorage:
 let clearButton = document.querySelector('.clear_button');
 clearButton.addEventListener('click', () => {
-  localStorage.clear();
+  localStorage.removeItem('message');
   textForm.value = '';
 });
