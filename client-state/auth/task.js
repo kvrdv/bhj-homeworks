@@ -1,15 +1,27 @@
+// Очистка id:
+// localStorage.removeItem('id');
+
+// console.log(localStorage.getItem('id'))
+
 // Приветствие и ID пользователя:
 let welcome = document.querySelector('.welcome');
 let id = document.getElementById('user_id');
 
-// Показываем форму при открытии страницы:
+// Оболочка формы:
 let formWrapper = document.querySelector('.signin');
-formWrapper.classList.add('signin_active');
 
 // Форма, логин и пароль из формы:
 let form = document.getElementById('signin__form');
 let formLogin = document.querySelectorAll('.control')[0];
 let formPassword = document.querySelectorAll('.control')[1];
+
+if (localStorage.getItem('id') != null) {
+  welcome.classList.add('welcome_active');
+  id.textContent = localStorage.getItem('id');
+} else if (localStorage.getItem('id') == null) {
+  // Показываем форму при открытии страницы:
+  formWrapper.classList.add('signin_active');
+};
 
 // Обработчик события - отправка формы:
 form.addEventListener('submit', function (e) {
@@ -40,6 +52,7 @@ form.addEventListener('submit', function (e) {
         formWrapper.classList.remove('signin_active');
         welcome.classList.add('welcome_active');
         id.textContent = request.response.user_id;
+        localStorage.setItem('id', request.response.user_id);
       };
 
       // Обнуляем данные формы:
