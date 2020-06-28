@@ -1,6 +1,12 @@
 // Элементы управления количеством:
 let quantityControls = document.querySelectorAll('.product__quantity-control');
 
+// Кнопки добавить в корзину:
+let addButton = document.querySelectorAll('.product__add');
+
+// Корзина:
+let cart = document.querySelector('.cart__products');
+
 // Обработчик события клик по элементу управления количеством:
 quantityControls.forEach((quantity) => {
   quantity.addEventListener('click', (eventObject) => {
@@ -17,15 +23,9 @@ quantityControls.forEach((quantity) => {
   });
 });
 
-// Кнопки добавить в корзину:
-let addButton = document.querySelectorAll('.product__add');
-
 // Добавление товара в корзину:
 addButton.forEach((button) => {
   button.addEventListener('click', (eventButton) => {
-
-    // Корзина:
-    let cart = document.querySelector('.cart__products');
 
     // Товар по которому кликнули и сведения о нём:
     let product = eventButton.currentTarget.closest('.product');
@@ -33,12 +33,22 @@ addButton.forEach((button) => {
     let productImage = product.querySelector('.product__image').getAttribute('src');
     let productQuantity = product.querySelector('.product__quantity-value').textContent;
 
-    cart.insertAdjacentHTML('beforeEnd', '<div class="cart__product" data-id="1"><img class="cart__product-image" src="image.png"><div class="cart__product-count">0</div></div>');
-    document.querySelector('.cart__product').dataset.id = productId;
-    document.querySelector('.cart__product-image').setAttribute('src', productImage);
-    document.querySelector('.cart__product-count').textContent = Number(document.querySelector('.cart__product-count').textContent) + Number(productQuantity);
-    
-    console.log(cart.children);
+    // Проверка наличия товара в корзине:
+    let cartElement = [...cart.children].find(cartItem => cartItem.dataset.id === productId);
 
+    //Если есть:
+    if (cartElement) {
+      let quantity = cartElement.querySelector('.cart__product-count').textContent;
+      cartElement.querySelector('.cart__product-count').textContent = Number(productQuantity) + Number(quantity);
+    } else {
+
+      // Если нет:
+      cartElement = (document.querySelector('template').content).cloneNode(true);
+      cartElement.querySelector('.cart__product').dataset.id = productId;
+      cartElement.querySelector('img').src = productImage;
+      cartElement.querySelector('.cart__product-count').textContent = productQuantity;
+      cart.appendChild(cartElement);
+
+    };
   });
-});
+}); 
